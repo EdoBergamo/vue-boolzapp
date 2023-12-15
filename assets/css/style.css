@@ -206,11 +206,22 @@ input.text-search {
   text-align: center;
 }
 
-.messag-send {
-  background-color: #fff;
-  padding: 20px 20px 25px;
+.message-send,
+.message-received {
+  width: 60%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.message-send {
+  background-color: #d5f9ba;
+  float: right;
+  clear: both;
 }
 
 .message-received {
-  background-color: #d5f9ba;
+  background-color: #fff;
+  float: left;
+  clear: both;
 }

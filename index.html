@@ -38,14 +38,14 @@
               <input type="text" placeholder="Cerca o inizia una nuova chat" class="text-search">
             </div>
 
-            <ul class="list-chats d-flex flex-column justify-center">
-              <li v-for="contact in contacts" class="preview-chat">
+            <ul class="list-chats d-flex flex-column">
+              <li v-for="contact in contacts" class="preview-chat" @click="setActiveContact(contact)">
                 <div class="box-avatars d-flex justify-center">
                   <img class="photo-list-avatar" :src="contact.avatar" :alt="`${contact.name}`">
                   <h4>{{ contact.name }}</h4>
                 </div>
               </li>
-            </ul>
+            </ul>            
           </div>
         </aside>
 
@@ -65,7 +65,17 @@
             </div>
           </div>
 
-          <div class="main-chat">SPAZIO MESSAGGI</div>
+          <div class="main-chat">
+            <div v-if="activeContact">
+              <div v-for="message in activeContact.messages" :key="message.date" :class="{ 'message-send': message.status === 'sent', 'message-received': message.status === 'received' }">
+                <p>{{ message.message }}</p>
+                <span>{{ message.date }}</span>
+              </div>
+            </div>
+            <div v-else>
+              <p>Seleziona un contatto</p>
+            </div>
+          </div>
           <div class="bottom-chat d-flex">
             <i class="fa-regular fa-face-smile"></i>
             <input type="text" placeholder="Scrivi un messaggio">
