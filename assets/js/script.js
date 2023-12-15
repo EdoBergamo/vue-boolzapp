@@ -167,10 +167,34 @@ createApp({
         }
       ],
       activeContact: null,
+      newMessageText: '', 
     };
   },
 
   methods: {
+    sendMessage() {
+      // Verifica se il testo del nuovo messaggio non è una stringa vuota o spazi vuoti prima di inviare
+      if (this.newMessageText.trim() !== '') {
+        const newMessage = {
+          date: new Date().toLocaleString(),
+          message: this.newMessageText,
+          status: 'sent',
+        };
+
+        this.activeContact.messages.push(newMessage);
+
+        this.newMessageText = '';
+
+        setTimeout(() => {
+          const replyMessage = {
+            date: new Date().toLocaleString(),
+            message: 'OK',
+            status: 'received',
+          };
+          this.activeContact.messages.push(replyMessage);
+        }, 1000);
+      }
+    },
     setActiveContact(contact) {
       this.activeContact = contact;
     },
