@@ -35,11 +35,11 @@
 
             <div class="search-chat d-flex align-center">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" placeholder="Cerca o inizia una nuova chat" class="text-search">
+              <input type="text" placeholder="Cerca o inizia una nuova chat" class="text-search" v-model="search" @keyup="searchContact">
             </div>
 
             <ul class="list-chats d-flex flex-column">
-              <li v-for="contact in contacts" class="preview-chat" @click="setActiveContact(contact)">
+              <li v-show="contact.visible" v-for="contact in contacts" class="preview-chat" @click="setActiveContact(contact)">
                 <div class="box-avatars d-flex justify-center">
                   <img class="photo-list-avatar" :src="contact.avatar" :alt="`${contact.name}`">
                   <h4>{{ contact.name }}</h4>

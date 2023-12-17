@@ -167,7 +167,8 @@ createApp({
         }
       ],
       activeContact: null,
-      newMessageText: '', 
+      newMessageText: '',
+      search: '',
     };
   },
 
@@ -198,5 +199,13 @@ createApp({
     setActiveContact(contact) {
       this.activeContact = contact;
     },
+    searchContact() {
+      this.contacts.forEach(contact => {
+        if (contact.name.toLowerCase().includes(this.search.toLowerCase()))
+          contact.visible = true
+        else 
+          contact.visible = false
+      })
+    }
   },
 }).mount('#app');
