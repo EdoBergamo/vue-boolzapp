@@ -35,17 +35,23 @@
 
             <div class="search-chat d-flex align-center">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" placeholder="Cerca o inizia una nuova chat" class="text-search" v-model="search" @keyup="searchContact">
+              <input type="text" placeholder="Cerca o inizia una nuova chat" class="text-search" v-model="search"
+                @keyup="searchContact">
             </div>
 
             <ul class="list-chats d-flex flex-column">
-              <li v-show="contact.visible" v-for="contact in contacts" class="preview-chat" @click="setActiveContact(contact)">
+              <li v-show="contact.visible" v-for="contact in contacts" class="preview-chat"
+                @click="setActiveContact(contact)">
                 <div class="box-avatars d-flex justify-center">
                   <img class="photo-list-avatar" :src="contact.avatar" :alt="`${contact.name}`">
-                  <h4>{{ contact.name }}</h4>
+                  <div>
+                    <h4>{{ contact.name }}</h4>
+                    <p class="gray" v-if="contact.messages.length > 0">{{ contact.messages[contact.messages.length -
+                      1].message }}</p>
+                  </div>
                 </div>
               </li>
-            </ul>            
+            </ul>
           </div>
         </aside>
 
@@ -65,12 +71,26 @@
             </div>
           </div>
 
-          <div class="main-chat">
+          <div id="message-container" class="main-chat">
             <div v-if="activeContact">
-              <div v-for="message in activeContact.messages" :key="message.date" :class="{ 'message-send': message.status === 'sent', 'message-received': message.status === 'received' }">
-                <p>{{ message.message }}</p>
-                <span>{{ message.date }}</span>
+              <div v-for="(message, index) in activeContact.messages" :key="index" :class="{ 'message-send': message.status === 'sent', 'message-delete': message.status === 'sent-delete', 'message-received': message.status === 'received' }">
+                <div class="message-content">
+                  <p>
+                    <svg v-if="message.status === 'sent-delete'" viewBox="0 0 24 24" height="15" width="15" preserveAspectRatio="xMidYMid meet" class="" fill="none"><title>recalled</title><path fill-rule="evenodd" clip-rule="evenodd" d="M7.75897 6.43054C8.93584 5.533 10.4057 5 12 5C15.866 5 19 8.13401 19 12C19 13.5943 18.467 15.0642 17.5695 16.241L7.75897 6.43054ZM6.35707 7.85707C5.50399 9.01706 5 10.4497 5 12C5 15.866 8.13401 19 12 19C13.5503 19 14.9829 18.496 16.1429 17.6429L6.35707 7.85707ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z" fill="currentColor"></path></svg>
+                    {{ message.message }}
+                  </p>
+                  <span>{{ message.date }}</span>
+                </div>
+                <div class="message-actions">
+                  <i class="fas fa-chevron-down" @click="toggleModal(message)"></i>
+                  <div v-if="message.showOptions" class="message-modal">
+                    <button @click="showMessageInfo(message)">Message info</button>
+                    <button @click="deleteMessage(index)">Delete for you</button>
+                    <button v-if="message.status === 'sent'" @click="deleteMessagePerm(index)">Delete for all</button>
+                  </div>
+                </div>
               </div>
+
             </div>
             <div v-else>
               <p>Seleziona un contatto</p>
@@ -87,6 +107,7 @@
   </div>
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@2.1.1/build/global/luxon.min.js"></script>
   <script src="./assets/js/script.js"></script>
 </body>
 </html>

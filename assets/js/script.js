@@ -174,10 +174,17 @@ createApp({
 
   methods: {
     sendMessage() {
-      // Verifica se il testo del nuovo messaggio non è una stringa vuota o spazi vuoti prima di inviare
       if (this.newMessageText.trim() !== '') {
+        const DateTime = luxon.DateTime;
+        const userMessage = this.newMessageText.toLowerCase();
+
+        const greetings = ['ciao', 'salve', 'buongiorno', 'buonasera', 'buonanotte', 'hello', 'hi', 'hey'];
+        const replyGreetings = ['Ciao!', 'Buongiorno!', 'Salve!', 'Hello!', 'Hi!', 'Hey!'];
+
+        const isGreeting = this.isMessageAGreeting(userMessage, greetings);
+
         const newMessage = {
-          date: new Date().toLocaleString(),
+          date: DateTime.now().toFormat('dd/MM/yyyy HH:mm'),
           message: this.newMessageText,
           status: 'sent',
         };
@@ -187,25 +194,78 @@ createApp({
         this.newMessageText = '';
 
         setTimeout(() => {
-          const replyMessage = {
-            date: new Date().toLocaleString(),
-            message: 'OK',
-            status: 'received',
-          };
-          this.activeContact.messages.push(replyMessage);
+          if (isGreeting) {
+            const randomReplyIndex = Math.floor(Math.random() * replyGreetings.length);
+            const replyMessage = {
+              date: DateTime.now().toFormat('dd/MM/yyyy HH:mm'),
+              message: replyGreetings[randomReplyIndex],
+              status: 'received',
+            };
+            this.activeContact.messages.push(replyMessage);
+          } else {
+            const defaultReply = {
+              date: DateTime.now().toFormat('dd/MM/yyyy HH:mm'),
+              message: 'OK',
+              status: 'received',
+            };
+            this.activeContact.messages.push(defaultReply);
+          }
+
+          this.scrollMessageContainerToBottom();
         }, 1000);
       }
     },
+    scrollMessageContainerToBottom() {
+      const container = document.getElementById('message-container');
+      if (container) {
+        container.scrollTop = container.scrollHeight - container.clientHeight;
+        setTimeout(() => {
+          container.scrollTop = container.scrollHeight - container.clientHeight;
+        }, 50);
+      }
+    },    
+    isMessageAGreeting(message, greetings) {
+      return greetings.some(greeting => message.includes(greeting));
+    },
     setActiveContact(contact) {
       this.activeContact = contact;
+    },
+    toggleModal(message) {
+      message.showOptions = !message.showOptions;
     },
     searchContact() {
       this.contacts.forEach(contact => {
         if (contact.name.toLowerCase().includes(this.search.toLowerCase()))
           contact.visible = true
-        else 
+        else
           contact.visible = false
       })
-    }
+    },
+    showMessageOptions(message, index) {
+      this.activeContact.messages.forEach(msg => {
+        msg.showOptions = false;
+      });
+
+      message.showOptions = !message.showOptions;
+    },
+    deleteMessage(index) {
+      this.activeContact.messages.splice(index, 1);
+    },
+    deleteMessagePerm(index) {
+      const deletedMessage = this.activeContact.messages[index];
+
+      if (deletedMessage.status === 'sent' || deletedMessage.status === 'sent-delete') {
+        this.activeContact.messages.splice(index, 1, {
+          date: deletedMessage.date,
+          message: 'Hai eliminato questo messaggio',
+          status: 'sent-delete',
+        });
+      } else {
+        this.activeContact.messages.splice(index, 1);
+      }
+    },
+    showMessageInfo(message) {
+      console.log(`Informazioni sul messaggio '${message.message}':\nInviato il: ${message.date}\nStato: ${message.status}`)
+    },
   },
 }).mount('#app');

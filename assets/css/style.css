@@ -175,6 +175,7 @@ input.text-search {
 }
 
 .box-avatars > img.photo-list-avatar {
+  margin-top: 10px;
   display: block;
   width: 3.75rem;
   object-fit: cover;
@@ -207,6 +208,7 @@ input.text-search {
 }
 
 .message-send,
+.message-delete,
 .message-received {
   width: 60%;
   margin-bottom: 10px;
@@ -220,8 +222,56 @@ input.text-search {
   clear: both;
 }
 
+.message-delete {
+  background-color: #d5f9ba;
+  float: right;
+  clear: both;
+  color: #566;
+  font-style: italic;
+}
+
 .message-received {
   background-color: #fff;
   float: left;
   clear: both;
+}
+
+.gray {
+  color: #777;
+  text-transform: capitalize;
+  font-weight: normal;
+  margin-top: 5px;
+}
+
+.message-actions {
+  position: relative;
+}
+
+.message-modal {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.message-modal > button {
+  all: unset;
+  color: #777;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.fa-chevron-down {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  padding: 5px;
 }
